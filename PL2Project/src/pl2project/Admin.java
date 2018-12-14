@@ -107,4 +107,15 @@ public class Admin extends SystemUser implements Serializable{
 //      if(x.deletestudent(id))
 //          System.out.println("Deleted successfulllllyyyy!!");
 //  }
+    
+      @Override
+        public Admin login(String username,String password){
+          for(Admin x:admins){
+            if(username.equals(this.UserName)&&password.equals(this.PassWord))
+                return this;
+             }
+           return null;
+  
+  
+        }
 }
