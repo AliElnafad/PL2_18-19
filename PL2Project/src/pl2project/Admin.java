@@ -32,12 +32,7 @@ public class Admin extends SystemUser implements Serializable{
             String fname,String lname){
         super(id,email,username,password,fname,lname);
     }
-        public boolean login(String username,String password){
-            if(username.equals("admin")&&password.equals("admin"))
-                    return true;
-            else 
-                return false;
-        }
+  
 
 //    **********************************************
 //    public void add_studnet(int id,String email,String username,String password,
