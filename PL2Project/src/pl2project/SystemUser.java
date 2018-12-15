@@ -9,7 +9,7 @@ package pl2project;
  *
  * @author ali
  */
-public class  SystemUser {
+public abstract class  SystemUser {
        
     protected int ID;
     protected String UserName;
@@ -90,5 +90,8 @@ public class  SystemUser {
         this.Lname=lname;
         
     }
+
+   
+    public abstract SystemUser login(String username,String password);
  
 }

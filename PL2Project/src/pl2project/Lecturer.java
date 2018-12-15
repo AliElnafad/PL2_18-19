@@ -1,9 +1,7 @@
 package pl2project;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 /**
  *
@@ -16,23 +14,25 @@ public class Lecturer extends SystemUser implements Serializable {
      * @author pc
      */
     public static ArrayList<Lecturer> lecturers = new ArrayList<>();
-    static ArrayList<String> teached_subjects = new ArrayList<>();
+    private static ArrayList<Subject> teachedSubjects = new ArrayList<>();
 //    public static ArrayList<student>reports = new ArrayList<>();
-    HashMap<Integer, Integer> map = new HashMap<>();
+    HashMap<Integer, Double> map = new HashMap<>();
     HashMap<Integer, Integer> student_degrees = new HashMap<>();
 
     Scanner sc = new Scanner(System.in);
     BinaryManager fmanager=new BinaryManager();
 
-    public static ArrayList<String> getTeached_subjects() {
-        return teached_subjects;
-    }
-
-    public static void setTeached_subjects(ArrayList<String> teached_subjects) {
-        Lecturer.teached_subjects = teached_subjects;
-    }
-    private final String lecturerFileName = "lecturer.txt";
-    private final String reportsfilename = "reports.txt";
+//    public static ArrayList<String> getTeached_subjects() {
+//        return teached_subjects;
+//    }
+//
+//    public static void setTeached_subjects(Lecturer) {
+//        Lecturer.teached_subjects.add(e)
+ 
+//    }
+    private final String lecturerFileName = "lecturer.bin";
+    private final String reportsfilename = "reports.bin";
+    private final String subjectsFileName="teachedSubjects.bin";
 
     public Lecturer() {
     }
@@ -41,7 +41,30 @@ public class Lecturer extends SystemUser implements Serializable {
         super(id, email, username, password, fname, lname);
 
     }
+    @Override
+    public Lecturer login(String username,String password){
+        loadAUX();
+        for(Lecturer x:lecturers){
+            if(username.equals(x.UserName)&&password.equals(x.PassWord))
+                    return x;
+                }
+        return null;
+    }
 
+        private void loadSubjects(){
+           teachedSubjects=(ArrayList < Subject >)fmanager.read(subjectsFileName);
+        }
+        private boolean updateSubjects(){
+            return fmanager.write(subjectsFileName,teachedSubjects);
+        }
+        
+           public  boolean SetTeachedSubjects(Subject e) {
+        loadSubjects();
+        teachedSubjects.add(e);
+        return updateSubjects();
+        
+        
+    }
     public boolean addlecturer() {
         loadAUX();
         lecturers.add(this);
@@ -76,12 +99,12 @@ public class Lecturer extends SystemUser implements Serializable {
     }
 
     private String getDataAUX() {
-        return this.ID + "~~" + this.FName + "~~" + this.Lname + "~~" + this.UserName + "~~" + this.PassWord + "~~" + Lecturer.teached_subjects + "~~";
+        return this.ID + "~~" + this.FName + "~~" + this.Lname + "~~" + this.UserName + "~~" + this.PassWord + "~~" + Lecturer.teachedSubjects + "~~";
 
     }
 
     private Student write_reports_Aux(Student x) {
-        map.put(x.id, x.degree);
+        map.put(x.ID, x.getDegree());
 
         for (int i = 0; i < x.reports.length; i++) {
             System.out.print("Enter The Report Please : " + (i + 1) + " : ");
@@ -92,13 +115,10 @@ public class Lecturer extends SystemUser implements Serializable {
     }
 
     //END OF AUX FUNCTIONS SECTION//
-    public String searchlecturer(int id){
+    public boolean searchlecturer(int id){
         loadAUX();
         int index=getterAUX(id);
-        if(index>0)
-            return "found!!"+lecturers.get(index).toString();
-        else 
-            return "not found";
+        return (index>0);
         
         
     }
@@ -130,7 +150,7 @@ public class Lecturer extends SystemUser implements Serializable {
         return true;
     }
 
-    public void addexam(subject x) {
+    public void addexam(Subject x) {
         x.addexam();
     }
 
