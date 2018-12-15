@@ -47,7 +47,8 @@ public class Student extends SystemUser implements Serializable{
     //public static ArrayList<subjects> allSubject = new ArrayList<subjects>();
     public static ArrayList<Subject> registeredsubjects = new ArrayList<Subject>();
     public static ArrayList<Integer> IDEnter = new ArrayList<Integer>();
-    public static ArrayList<Double> degres = new ArrayList<Double>();
+    public static ArrayList<Exam> exams = new ArrayList<Exam>();
+    public static ArrayList<Double> degrees= new ArrayList<>();
  //   public static HashMap<Integer,String> stuInfo = new HashMap<>();
     public static HashMap<String,Float> degInfo = new HashMap<>();
   //  public static HashMap<Object , Object> H_degrees = new HashMap<>();
@@ -55,8 +56,18 @@ public class Student extends SystemUser implements Serializable{
     private final String studentSubjectsFile="studentSubjects.bin";
 
     public  boolean setRegisteredsubjects(Subject s) {
+        
         loadSubjects();
-        registeredsubjects.add(s);
+           for(int i =0 ; i<=registeredsubjects.size();i++){
+        
+            if( registeredsubjects.get(i) == s) {
+                System.out.println("you reguistered it before ");
+                return false;
+                
+                
+            }
+        }
+           registeredsubjects.add(s);
         return updateSubjects();
     }
    
@@ -65,7 +76,7 @@ public class Student extends SystemUser implements Serializable{
     private String[] subjects;
     private String[] degrees_for_each_question;
     */
-    Exams exam = new Exams() ;
+    Exam exam = new Exam() ;
     Subject sub = new Subject() ;
   //  private static int ACi=0;
     
@@ -92,31 +103,7 @@ public class Student extends SystemUser implements Serializable{
     
     
     
-    public boolean registere (String subID)
-    {
-        
-         
-        
-        for(int i =0 ; i<=registeredsubject.size();i++){
-        
-            if( registeredsubject.get(i) == subID) {
-                System.out.println("you are reguist it before ");
-                break ;
-                
-            }
-        }
-        
-        if (registeredsubject.add(subID)){
-            
-            
-            return true;}
-        
-        else
-        {
-            System.out.println("Sorry ");
-            return false ;
-        }
-    }
+    
     
     
     
@@ -124,16 +111,16 @@ public class Student extends SystemUser implements Serializable{
     public String showExam(String subID)
     {
         int flag = 0 ;
-        if(registeredsubject.isEmpty())
+        if(registeredsubjects.isEmpty())
                 flag = 0;
         else{
-            for(int i = 0 ; i<=registeredsubject.size() ; i++)
+            for(int i = 0 ; i<=registeredsubjects.size() ; i++)
             {
                 /*if(registeredsubject.isEmpty()){
                     flag = 0;
                     break;
                 }*/
-                 if(subID.equals(registeredsubject.get(i)))
+                 if(subID.equals(registeredsubjects.get(i)))
                 {
                     flag = 1 ; 
                     break ;
@@ -146,7 +133,7 @@ public class Student extends SystemUser implements Serializable{
             }
         }
         if (flag == 1)
-            return exam.get_data() ; 
+            return Exam.get_data() ; 
         else    
             return "sorry you are not registree this subject " ;
         
@@ -204,16 +191,30 @@ public class Student extends SystemUser implements Serializable{
         
         
     } 
-    public float myDegree()
+    public void setExams(Exam e)
     {
-        float degrees = 0;
-        for(int i =0 ; i<=Exams.degree.size();i++)
-        {
-            degrees = degrees + Exams.degree.get(i);
-            
-        }
-        return degrees;
+        exams.add(e);
+        
     }
+    public void addDegree(ArrayList<Exam> arr)
+    {
+        for(int i =0 ; i<=arr.size() ;i++ )
+        {
+            degrees.add( arr.get(i).calc(exam));
+        }
+        
+    }
+   
+//    public float myDegree()
+//    {
+//        double degres = 0;
+//        for(int i =0 ; i<=Exam.degree.size();i++)
+//        {
+//            degres = degres + degrees.get(i);
+//            
+//        }
+//        return degres;
+//    }
 
     @Override
     public String toString() {
@@ -222,9 +223,11 @@ public class Student extends SystemUser implements Serializable{
     }
     public  void report()
     {
-        for(int i=0 ;i<=registeredsubject.size();i++ )
+        for(int i=0 ;i<=registeredsubjects.size();i++ )
         {
+            
             System.out.println(degInfo.get(i));
+            
             
         }
         
@@ -306,6 +309,7 @@ public class Student extends SystemUser implements Serializable{
     
     
 }
+
 
    
    
